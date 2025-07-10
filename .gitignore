@@ -1,0 +1,5 @@
+.ipynb_checkpoints/
+bert_toxic_model/
+jigsaw-toxic-comment-classification-challenge/
+toxic_comment_classification_env/
+bert_toxic_model_quantized.pt

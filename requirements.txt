@@ -1,0 +1,14 @@
+huggingface-hub
+ipykernel
+joblib
+matplotlib
+nltk
+numpy
+pandas
+scikit-learn
+spacy
+streamlit
+torch
+tqdm
+transformers
+uvicorn
