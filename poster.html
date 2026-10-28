@@ -8,7 +8,9 @@
 :root { --ink:#1c1915; --muted:#5c564c; --line:#d9d1c3; --paper:#f6f1e7; --card:#fffdf8; --accent:#6E2E2E; }
 * { box-sizing:border-box; }
 body { margin:0; background:#e7e1d6; color:var(--ink); font-family:Georgia, "Iowan Old Style", serif; }
-.sheet { max-width:1100px; margin:28px auto; background:var(--paper); border:1px solid var(--line); }
+.sheet { max-width:1180px; margin:28px auto; background:var(--paper); border:1px solid var(--line); }
+.band { display:grid; grid-template-columns:1.25fr 1fr 0.9fr; border-top:1px solid var(--line); }
+.band section { padding-bottom:18px; }
 header { display:flex; justify-content:space-between; gap:24px; padding:28px 32px 18px; border-bottom:3px solid var(--accent); }
 h1 { font-size:34px; line-height:1.05; margin:0 0 8px; letter-spacing:-0.4px; }
 .claim { margin:0; font-family:"Segoe UI", sans-serif; font-size:16px; color:var(--muted); max-width:680px; }
@@ -26,7 +28,7 @@ ul { margin:0; padding-left:18px; }
 .stat span { font-family:"Segoe UI", sans-serif; font-size:12px; color:var(--muted); }
 footer { display:flex; justify-content:space-between; gap:20px; padding:16px 32px 22px; border-top:1px solid var(--line); font-family:"Segoe UI", sans-serif; font-size:14px; }
 code { font-family:Consolas, monospace; background:var(--card); border:1px solid var(--line); padding:2px 6px; }
-@media (max-width:800px) { .grid { grid-template-columns:1fr; } section { border-right:0; border-bottom:1px solid var(--line); } header, footer { display:block; } .tags { text-align:left; margin-top:12px; } }
+@media (max-width:800px) { .grid, .band { grid-template-columns:1fr; } section { border-right:0; border-bottom:1px solid var(--line); } header, footer { display:block; } .tags { text-align:left; margin-top:12px; } }
 </style>
 </head>
 <body>
@@ -44,8 +46,13 @@ code { font-family:Consolas, monospace; background:var(--card); border:1px solid
     <section><h2>Method</h2><ul><li>TF-IDF plus logistic regression as the served baseline.</li><li>Random forest for comparison. BERT only on a small subset, so it is not the result.</li><li>The Streamlit page returns a probability per label and a LIME view.</li></ul></section>
     <section><h2>Evidence</h2><div class="stat"><b>0.66</b><span>toxic F1, linear model</span></div><div class="stat"><b>0.55</b><span>micro F1, six labels</span></div><div class="stat"><b>0.43</b><span>macro F1</span></div></section>
   </div>
+  <div class="band">
+    <section><h2>What the result actually says</h2><ul><li>Six labels at once: toxic, severe toxic, obscene, threat, insult, identity hate. The linear model’s toxic F1 is 0.66. Micro F1 across labels is 0.55. Macro F1 is 0.43.</li><li>Threat F1 is 0.14 and identity-hate F1 is 0.21. Those labels are rare, so the average is pulled down by them.</li><li>The page returns a probability per label and a LIME view of the words that moved the score.</li></ul></section>
+    <section><h2>What it does not show</h2><ul><li>BERT in the README was trained on a small subset for a demo. Several labels score zero. That table is not a full fine-tune and it is not the model the app serves.</li><li>A high recall on severe toxic (0.90) comes with precision 0.20. The model flags a lot of comments that are not severely toxic.</li></ul></section>
+    <section><h2>Beside the other attempts</h2><ul><li>Logistic regression plus TF-IDF is the served baseline. Random forest raises precision and loses recall. Toxic F1 ends up similar, about 0.66.</li><li>Macro F1 is the honest summary. Micro F1 hides the rare labels.</li></ul></section>
+  </div>
   <footer>
-    <div><h2>What came out of it</h2><ul><li>Threat and identity hate stay weak because there are few examples.</li><li>The BERT table in the README is a short demo run, not a full fine-tune.</li></ul></div>
+    <div><h2>Stack</h2><p>TF-IDF, logistic regression, LIME, Streamlit. Environment is toxic_comment_classification_env.</p></div>
     <div><h2>Look at it</h2><p>Run <code>.\run.ps1</code> and paste a comment.</p></div>
   </footer>
 </article>
