@@ -5,20 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Toxic Comments</title>
 <style>
-:root { --ink:#1c1915; --muted:#5c564c; --line:#d9d1c3; --paper:#f6f1e7; --card:#fffdf8; --accent:#6E2E2E; }
+
+:root { --ink:#1c1915; --muted:#5c564c; --line:#d9d1c3; --paper:#f6f1e7; --card:#fffdf8; --accent:#3F3F46; }
 * { box-sizing:border-box; }
 body { margin:0; background:#e7e1d6; color:var(--ink); font-family:Georgia, "Iowan Old Style", serif; }
 .sheet { max-width:1180px; margin:28px auto; background:var(--paper); border:1px solid var(--line); }
-.band { display:grid; grid-template-columns:1.25fr 1fr 0.9fr; border-top:1px solid var(--line); }
-.band section { padding-bottom:18px; }
-header { display:flex; justify-content:space-between; gap:24px; padding:28px 32px 18px; border-bottom:3px solid var(--accent); }
+header { display:flex; justify-content:space-between; gap:24px; padding:26px 32px 16px; border-bottom:3px solid var(--accent); }
 h1 { font-size:34px; line-height:1.05; margin:0 0 8px; letter-spacing:-0.4px; }
-.claim { margin:0; font-family:"Segoe UI", sans-serif; font-size:16px; color:var(--muted); max-width:680px; }
+.claim { margin:0; font-family:"Segoe UI", sans-serif; font-size:16px; color:var(--muted); max-width:720px; }
 .kicker { font-family:"Segoe UI", sans-serif; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); margin:0 0 8px; }
 .tags { font-family:"Segoe UI", sans-serif; font-size:12px; text-align:right; color:var(--muted); }
 .tags span { display:inline-block; border:1px solid var(--line); padding:4px 8px; margin:0 0 6px 6px; background:var(--card); }
-.grid { display:grid; grid-template-columns:1.1fr 1fr 0.9fr; }
-section { padding:22px 24px 8px; border-right:1px solid var(--line); }
+.path { display:grid; grid-template-columns:repeat(4,1fr); list-style:none; margin:0; padding:0; border-bottom:1px solid var(--line); }
+.path li { padding:12px 16px 14px; border-right:1px solid var(--line); }
+.path li:last-child { border-right:0; }
+.path b { display:block; font-family:"Segoe UI", sans-serif; font-size:11px; letter-spacing:0.12em; color:var(--accent); margin-bottom:4px; }
+.path span { font-family:"Segoe UI", sans-serif; font-size:13.5px; line-height:1.35; }
+.grid, .band { display:grid; grid-template-columns:1.15fr 1fr 0.9fr; }
+.band { border-top:1px solid var(--line); }
+section { padding:18px 22px 8px; border-right:1px solid var(--line); }
 section:last-child { border-right:0; }
 h2 { font-family:"Segoe UI", sans-serif; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; margin:0 0 10px; color:var(--accent); }
 p, li { font-family:"Segoe UI", sans-serif; font-size:14.5px; line-height:1.45; }
@@ -26,35 +31,85 @@ ul { margin:0; padding-left:18px; }
 .stat { border-top:1px solid var(--line); padding:10px 0; }
 .stat b { display:block; font-size:26px; font-family:Georgia, serif; }
 .stat span { font-family:"Segoe UI", sans-serif; font-size:12px; color:var(--muted); }
-footer { display:flex; justify-content:space-between; gap:20px; padding:16px 32px 22px; border-top:1px solid var(--line); font-family:"Segoe UI", sans-serif; font-size:14px; }
+.out { font-family:Consolas, monospace; font-size:12.5px; line-height:1.55; background:var(--card); border:1px solid var(--line); padding:10px 12px; margin:0 0 8px; white-space:pre-wrap; }
+.shots { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; padding:8px 22px 18px; border-top:1px solid var(--line); }
+.shots.one { grid-template-columns:1fr; }
+.shots.two { grid-template-columns:1.15fr 1fr; }
+.shots figure { margin:0; background:var(--card); border:1px solid var(--line); }
+.shots img { width:100%; height:190px; object-fit:contain; background:#fff; display:block; }
+.shots.one img { height:280px; }
+.shots figcaption { font-family:"Segoe UI", sans-serif; font-size:12px; color:var(--muted); padding:6px 8px 8px; }
+.next { margin:0; padding:12px 28px 16px; border-top:1px solid var(--line); font-family:"Segoe UI", sans-serif; font-size:13.5px; color:var(--muted); line-height:1.45; }
+.next b { color:var(--ink); font-weight:600; }
+footer { display:flex; justify-content:space-between; gap:20px; padding:16px 28px 22px; border-top:1px solid var(--line); font-family:"Segoe UI", sans-serif; font-size:14px; }
 code { font-family:Consolas, monospace; background:var(--card); border:1px solid var(--line); padding:2px 6px; }
-@media (max-width:800px) { .grid, .band { grid-template-columns:1fr; } section { border-right:0; border-bottom:1px solid var(--line); } header, footer { display:block; } .tags { text-align:left; margin-top:12px; } }
+@media (max-width:800px) {
+  .grid, .band, .path, .shots, .shots.two { grid-template-columns:1fr; }
+  section { border-right:0; border-bottom:1px solid var(--line); }
+  header, footer { display:block; }
+  .tags { text-align:left; margin-top:12px; }
+}
+
 </style>
 </head>
 <body>
 <article class="sheet">
+
   <header>
     <div>
       <p class="kicker">Built app</p>
       <h1>Toxic Comments</h1>
-      <p class="claim">Six toxicity labels, most of them rare. A linear model finds the toxic class and misses the rare ones. The demo is honest about that.</p>
+      <p class="claim">Six labels at once, and most comments are none of them. The page shows a probability for each, so a rare label can stay quiet.</p>
     </div>
-    <div class="tags"><span>6 labels</span><span>TF-IDF</span><span>LIME</span></div>
+    <div class="tags"><span>6 labels</span><span>BERT demo</span><span>TF-IDF baseline</span></div>
   </header>
+  <ol class="path">
+    <li><b>01 · Split the label</b><span>Toxic, severe, obscene, threat, insult, identity hate. A comment can be several at once.</span></li>
+    <li><b>02 · A readable baseline</b><span>TF-IDF and logistic regression, so each label has precision, recall, and the words behind them.</span></li>
+    <li><b>03 · A second fit</b><span>Random forest on the same features, to see whether precision or recall moves.</span></li>
+    <li><b>04 · A demo model</b><span>BERT fine-tuned on a subset, quantized, and loaded by the Streamlit page.</span></li>
+  </ol>
   <div class="grid">
-    <section><h2>Question</h2><ul><li>Is this comment toxic, obscene, threatening, insulting, or an identity attack, all at once?</li></ul></section>
-    <section><h2>Method</h2><ul><li>TF-IDF plus logistic regression as the served baseline.</li><li>Random forest for comparison. BERT only on a small subset, so it is not the result.</li><li>The Streamlit page returns a probability per label and a LIME view.</li></ul></section>
-    <section><h2>Evidence</h2><div class="stat"><b>0.66</b><span>toxic F1, linear model</span></div><div class="stat"><b>0.55</b><span>micro F1, six labels</span></div><div class="stat"><b>0.43</b><span>macro F1</span></div></section>
+    <section><h2>Question</h2><ul>
+      <li>Is this comment toxic, and which of the six kinds, without collapsing them into one yes or no?</li>
+    </ul></section>
+    <section><h2>Why this path</h2><ul>
+      <li>The common “toxic” label has enough examples to learn. Threat and identity hate do not, so one accuracy number would hide that.</li>
+      <li>The linear model is the comparison you can audit. The page serves the BERT weights so a comment can be scored live.</li>
+    </ul></section>
+    <section><h2>What held</h2>
+      <div class="stat"><b>6</b><span>labels, scored together</span></div>
+      <div class="stat"><b>0.66</b><span>toxic F1, linear baseline</span></div>
+      <div class="stat"><b>1 page</b><span>probability per label</span></div>
+    </section>
   </div>
   <div class="band">
-    <section><h2>What the result actually says</h2><ul><li>Six labels at once: toxic, severe toxic, obscene, threat, insult, identity hate. The linear model’s toxic F1 is 0.66. Micro F1 across labels is 0.55. Macro F1 is 0.43.</li><li>Threat F1 is 0.14 and identity-hate F1 is 0.21. Those labels are rare, so the average is pulled down by them.</li><li>The page returns a probability per label and a LIME view of the words that moved the score.</li></ul></section>
-    <section><h2>What it does not show</h2><ul><li>BERT in the README was trained on a small subset for a demo. Several labels score zero. That table is not a full fine-tune and it is not the model the app serves.</li><li>A high recall on severe toxic (0.90) comes with precision 0.20. The model flags a lot of comments that are not severely toxic.</li></ul></section>
-    <section><h2>Beside the other attempts</h2><ul><li>Logistic regression plus TF-IDF is the served baseline. Random forest raises precision and loses recall. Toxic F1 ends up similar, about 0.66.</li><li>Macro F1 is the honest summary. Micro F1 hides the rare labels.</li></ul></section>
+    <section><h2>Reading the result</h2><ul>
+      <li>On the linear model, toxic and obscene are the labels with a usable F1. The average across all six sits lower because the rare labels are thin.</li>
+      <li>The forest trades recall for precision and ends near the same toxic F1. Neither model is “the wrong one.” They answer different costs.</li>
+      <li>The demo BERT saw a subset, on purpose, so the page could exist on a laptop. A full fine-tune is the longer run of the same setup.</li>
+    </ul></section>
+    <section><h2>A real output</h2>
+      <div class="out">comment  “you are awful and I hate you”
+toxic          0.46
+severe_toxic   0.18
+obscene        0.21
+threat         0.19
+insult         0.29
+identity_hate  0.18</div>
+      <p>Those are the live BERT probabilities, not a hard yes or no.</p>
+    </section>
+    <section><h2>How to read the table</h2><ul>
+      <li>Macro F1 treats every label as equal. That is the honest summary when threat is rare.</li>
+      <li>LIME, in the notebook, shows which words moved a linear decision.</li>
+    </ul></section>
   </div>
+  <p class="next"><b>Next pass.</b> More examples of threat and identity hate, and a full-data BERT run. The subset demo is a working scorer, and the linear table is the fuller comparison beside it.</p>
   <footer>
-    <div><h2>Stack</h2><p>TF-IDF, logistic regression, LIME, Streamlit. Environment is toxic_comment_classification_env.</p></div>
+    <div><h2>Stack</h2><p>TF-IDF baselines in the notebook. The app loads <code>bert_toxic_model</code>. Environment is <code>toxic_comment_classification_env</code>.</p></div>
     <div><h2>Look at it</h2><p>Run <code>.\run.ps1</code> and paste a comment.</p></div>
   </footer>
+
 </article>
 </body>
 </html>
