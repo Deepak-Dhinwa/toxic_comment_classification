@@ -1,5 +1,8 @@
 # Toxic Comment Classification – My Approach
 
+One-page summary: open `poster.html` in a browser.
+Start: `.\run.ps1`
+
 ## Problem Statement (in my words)
 Online platforms are full of nasty, toxic comments—stuff that’s not just rude, but can be outright hateful or dangerous. I wanted to build a system that can spot these toxic comments automatically, across multiple categories (toxic, severe_toxic, obscene, threat, insult, identity_hate), using real data from the Jigsaw Kaggle challenge.
 
@@ -102,11 +105,12 @@ toxic_comment_classification/
 └── toxic_comment_classification_env/ 
 ```
 
-## Minimal Usage
+## Run
 
-1. Install dependencies:
-   `pip install -r requirements.txt`
-2. Run the app:
-   `streamlit run app.py`
-3. Try it out:
-   Paste a comment, hit “Classify”, see the probabilities for each toxic class.
+Use the existing environment. The saved BERT weights were checked in this environment, so do not upgrade it.
+
+```bash
+toxic_comment_classification_env\Scripts\streamlit.exe run app.py
+```
+
+Paste a comment and choose Classify. The app prints a probability for each of the six labels. BERT was trained on a subset, so rare labels such as threat often stay near zero. `requirements.txt` is there if the environment ever has to be recreated.
